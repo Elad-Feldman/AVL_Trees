@@ -334,140 +334,69 @@ public class AVLTree {
 
 	}
 
+	public void RotateRight( AVLTree.IAVLNode y){
+		AVLTree.IAVLNode x = y.getLeft();
+		AVLTree.IAVLNode b = x.getLeft();
+		AVLTree.IAVLNode p = y.getParent();
 
-//	public void printTree() {
-//		IAVLNode root = this.root;
-//		List<List<String>> lines = new ArrayList<List<String>>();
-//
-//		List<IAVLNode> level = new ArrayList<IAVLNode>();
-//		List<IAVLNode> next = new ArrayList<IAVLNode>();
-//
-//		level.add(root);
-//		int nn = 1;
-//
-//		int widest = 0;
-//
-//		while (nn != 0) {
-//			List<String> line = new ArrayList<String>();
-//
-//			nn = 0;
-//
-//			for (IAVLNode n : level) {
-//				if (n == null) {
-//					line.add(null);
-//
-//					next.add(null);
-//					next.add(null);
-//				} else {
-//					String aa = n.getText();
-//					line.add(aa);
-//					if (aa.length() > widest) widest = aa.length();
-//
-//					next.add(n.getLeft());
-//					next.add(n.getRight());
-//
-//					if (n.getLeft() != null) nn++;
-//					if (n.getRight() != null) nn++;
-//				}
-//			}
-//
-//			if (widest % 2 == 1) widest++;
-//
-//			lines.add(line);
-//
-//			List<IAVLNode> tmp = level;
-//			level = next;
-//			next = tmp;
-//			next.clear();
-//		}
-//
-//		int perpiece = lines.get(lines.size() - 1).size() * (widest + 4);
-//		for (int i = 0; i < lines.size(); i++) {
-//			List<String> line = lines.get(i);
-//			int hpw = (int) Math.floor(perpiece / 2f) - 1;
-//
-//			if (i > 0) {
-//				for (int j = 0; j < line.size(); j++) {
-//
-//					// split node
-//					char c = ' ';
-//					if (j % 2 == 1) {
-//						if (line.get(j - 1) != null) {
-//							c = (line.get(j) != null) ? '┴' : '┘';
-//						} else {
-//							if (j < line.size() && line.get(j) != null) c = '└';
-//						}
-//					}
-//					System.out.print(c);
-//
-//					// lines and spaces
-//					if (line.get(j) == null) {
-//						for (int k = 0; k < perpiece - 1; k++) {
-//							System.out.print(" ");
-//						}
-//					} else {
-//
-//						for (int k = 0; k < hpw; k++) {
-//							System.out.print(j % 2 == 0 ? " " : "─");
-//						}
-//						System.out.print(j % 2 == 0 ? "┌" : "┐");
-//						for (int k = 0; k < hpw; k++) {
-//							System.out.print(j % 2 == 0 ? "─" : " ");
-//						}
-//					}
-//				}
-//				System.out.println();
-//			}
-//
-//			// print line of numbers
-//			for (int j = 0; j < line.size(); j++) {
-//
-//				String f = line.get(j);
-//				if (f == null) f = "";
-//				int gap1 = (int) Math.ceil(perpiece / 2f - f.length() / 2f);
-//				int gap2 = (int) Math.floor(perpiece / 2f - f.length() / 2f);
-//
-//				// a number
-//				for (int k = 0; k < gap1; k++) {
-//					System.out.print(" ");
-//				}
-//				System.out.print(f);
-//				for (int k = 0; k < gap2; k++) {
-//					System.out.print(" ");
-//				}
-//			}
-//			System.out.println();
-//
-//			perpiece /= 2;
-//		}
-//	}
+		y.setRight(b);
+		x.setRight(y);
+
+		if ( p.getLeft().getKey()== y.getKey()){// include setParent
+			p.setLeft(x);
+		}
+
+		else{
+			p.setRight(x);
+		}
+
+	}
+	public void RotateLeft( AVLTree.IAVLNode x){
+		AVLTree.IAVLNode y = x.getRight();
+		AVLTree.IAVLNode b = y.getLeft();
+		AVLTree.IAVLNode p = x.getParent();
+
+		x.setRight(b);
+		y.setLeft(x);
+
+		if ( p.getLeft().getKey()== x.getKey()){// include setParent
+			p.setLeft(y);
+		}
+
+		else{
+			p.setRight(y);
+		}
+
+	}
+
+
 
 	/**
 	 * public interface IAVLNode
 	 * ! Do not delete or modify this - otherwise all tests will fail !
 	 */
 	public interface IAVLNode {
-		public int getKey(); //returns node's key (for virtuval node return -1)
+		int getKey(); //returns node's key (for virtuval node return -1)
 
-		public String getValue(); //returns node's value [info] (for virtuval node return null)
+		String getValue(); //returns node's value [info] (for virtuval node return null)
 
-		public void setLeft(IAVLNode node); //sets left child
+		void setLeft(IAVLNode node); //sets left child
 
-		public IAVLNode getLeft(); //returns left child (if there is no left child return null)
+		IAVLNode getLeft(); //returns left child (if there is no left child return null)
 
-		public void setRight(IAVLNode node); //sets right child
+		void setRight(IAVLNode node); //sets right child
 
-		public IAVLNode getRight(); //returns right child (if there is no right child return null)
+		IAVLNode getRight(); //returns right child (if there is no right child return null)
 
-		public void setParent(IAVLNode node); //sets parent
+		void setParent(IAVLNode node); //sets parent
 
-		public IAVLNode getParent(); //returns the parent (if there is no parent return null)
+		IAVLNode getParent(); //returns the parent (if there is no parent return null)
 
-		public boolean isRealNode(); // Returns True if this is a non-virtual AVL node
+		boolean isRealNode(); // Returns True if this is a non-virtual AVL node
 
-		public void setHeight(int height); // sets the height of the node
+		void setHeight(int height); // sets the height of the node
 
-		public int getHeight(); // Returns the height of the node (-1 for virtual nodes)
+		int getHeight(); // Returns the height of the node (-1 for virtual nodes)
 
 
 //		String getText();
@@ -483,13 +412,13 @@ public class AVLTree {
 	 * (It must implement IAVLNode)
 	 */
 	public class AVLNode implements IAVLNode {
-		private int key;
+		private final int key;
 		private int height;
-		private String val;
+		private final String val;
 		private IAVLNode left;
 		private IAVLNode right;
 		private IAVLNode parent;
-		private boolean realNode;
+		private final boolean realNode;
 
 
 		public AVLNode() {
