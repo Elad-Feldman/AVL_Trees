@@ -83,18 +83,19 @@ public class AVLTree {
 	 */
 	public int insert(int k, String i) {
 		IAVLNode newNode = new AVLNode(k, i);
-		System.out.println("newNode:" + newNode.getKey());
+//		System.out.println("newNode:" + newNode.getKey());
 
 		if (this.empty()) {
 			this.size++;
 			this.root = newNode;
-		}
+			return 0;
+		} //Insert to root
 
 		IAVLNode lastNode = findLastNodeEncountered(this.root, k);
 
 
 		if (lastNode.getKey() == k) {
-			return -1;
+			return 0;
 		}
 		this.size++;
 
@@ -105,10 +106,33 @@ public class AVLTree {
 			lastNode.setLeft(newNode);
 //		   System.out.println("father:"+lastNode.getKey()+" ,new left Son:"+ k );
 		}
+
 		//TODO: return number of balance actions
 
+		return  balanceTree(lastNode,0);
 
-		return 42;    // to be replaced by student code
+	}
+	public int balanceTree(IAVLNode node, int balance_actions){
+
+		if (!node.isRealNode() || balance_actions>this.size()+10) { //got up to parent
+
+			return balance_actions;
+		}
+		int diff = Rankdiff(node);
+		if (diff==2){
+			balance_actions++;
+//			System.out.println("STOPP");
+			RotateRight(node);
+
+		}
+		if (diff==-2){
+			balance_actions++;
+			RotateLeft(node);
+
+		}
+//		System.out.println(node.getKey()+"-->"+node.getParent().getKey());
+		return balanceTree( node.getParent(),balance_actions );
+
 	}
 
 
@@ -334,40 +358,62 @@ public class AVLTree {
 
 	}
 
-	public void RotateRight( AVLTree.IAVLNode y){
-		AVLTree.IAVLNode x = y.getLeft();
+	public void RotateRight( AVLTree.IAVLNode x){
+		AVLTree.IAVLNode y = x.getLeft();
+		AVLTree.IAVLNode b = y.getRight();
+		AVLTree.IAVLNode p = x.getParent();
+
+		x.setLeft(b);
+
+		y.setRight(x);
+		x.setParent(y);
+
+
+		swtichParents(p,x,y);
+
+	}
+	public void RotateLeft( AVLTree.IAVLNode y){
+		AVLTree.IAVLNode x = y.getRight();
 		AVLTree.IAVLNode b = x.getLeft();
 		AVLTree.IAVLNode p = y.getParent();
 
+
 		y.setRight(b);
-		x.setRight(y);
+		x.setLeft(y);
+		y.setParent(x);
+		swtichParents(p,y,x);
 
-		if ( p.getLeft().getKey()== y.getKey()){// include setParent
-			p.setLeft(x);
+
+
+
+
+	}
+	private void swtichParents(IAVLNode p, IAVLNode oldNode,IAVLNode newNode) {
+
+		if (p.isRealNode()){
+			if (p.getLeft().getKey() == oldNode.getKey()){// include setParent
+				p.setLeft(newNode);
+			}
+
+			else{
+				p.setRight(newNode);
+
+			}
+
+
 		}
-
 		else{
-			p.setRight(x);
+			newNode.setParent(p);
+
+			this.root =newNode;
 		}
 
 	}
-	public void RotateLeft( AVLTree.IAVLNode x){
-		AVLTree.IAVLNode y = x.getRight();
-		AVLTree.IAVLNode b = y.getLeft();
-		AVLTree.IAVLNode p = x.getParent();
 
-		x.setRight(b);
-		y.setLeft(x);
-
-		if ( p.getLeft().getKey()== x.getKey()){// include setParent
-			p.setLeft(y);
-		}
-
-		else{
-			p.setRight(y);
-		}
-
+	private int Rankdiff(AVLTree.IAVLNode node){
+		return node.getLeft().getHeight() -node.getRight().getHeight();
 	}
+
 
 
 
@@ -422,7 +468,7 @@ public class AVLTree {
 
 
 		public AVLNode() {
-			this.key = -1;
+			this.key = -1; // TODO change to -1
 			this.val = null;
 			this.height = -1;
 			this.realNode = false;
@@ -455,6 +501,9 @@ public class AVLTree {
 
 
 
+
+
+
 		}
 
 		public IAVLNode getLeft() {
@@ -463,8 +512,9 @@ public class AVLTree {
 
 		public void setRight(IAVLNode node) {
 			this.right = node;
-			this.right .setParent(this);
+
 			this.setHeight(1 + Math.max(this.left.getHeight(), this.right.getHeight() ) );
+			this.right.setParent(this);
 		}
 
 		public IAVLNode getRight() {
@@ -474,7 +524,7 @@ public class AVLTree {
 
 		public void setParent(IAVLNode node) {
 			this.parent = node;
-//			this.parent.setHeight(1 + Math.max(node.getLeft().getHeight(), node.getRight().getHeight() ) );
+
 		}
 
 		public IAVLNode getParent() {
@@ -482,13 +532,16 @@ public class AVLTree {
 		}
 
 		public boolean isRealNode() {
-			// Returns True if this is a non-virtual AVL node
-
 			return this.realNode;
 		}
 
 		public void setHeight(int height) {
-			this.height = height;
+				this.height = height;
+				IAVLNode p = this.getParent();
+				if (p.isRealNode()) {
+					p.setHeight(1 + Math.max(p.getLeft().getHeight(), p.getRight().getHeight()));
+
+				}
 
 		}
 

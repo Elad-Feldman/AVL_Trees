@@ -41,7 +41,7 @@ public class printableTree extends AVLTree {
                 }
             }
 
-            if (widest % 8 == 1) widest++;
+            if (widest % 2 == 1) widest++;
 
             lines.add(line);
 
@@ -51,7 +51,7 @@ public class printableTree extends AVLTree {
             next.clear();
         }
 
-        int perpiece = lines.get(lines.size() - 2).size() * (widest);
+        int perpiece = lines.get(lines.size() - 2).size() * (widest+4);
         for (int i = 0; i < lines.size(); i++) {
             List<String> line = lines.get(i);
             int hpw = (int) Math.floor(perpiece / 2f) - 1;
@@ -113,7 +113,26 @@ public class printableTree extends AVLTree {
     }
 
     public String getText(IAVLNode node){
-        return "" + node.getKey();
+        int what = 1;
+        String result="";
+
+        if (node.isRealNode()){
+            int h = node.getHeight();
+            int diff = (node.getLeft().getHeight()-node.getRight().getHeight());
+            int key = node.getKey();
+
+            if (what==0)
+                    return "("+diff+ ")";
+            if (what==1)
+                     return "(" + (h-node.getLeft().getHeight())+ ","+ (h-node.getRight().getHeight()) + ")";
+            if (what==2)
+                    return  "("+ key +","+h+")";
+
+            }
+
+//
+
+        return "*";
 
     }
 }
