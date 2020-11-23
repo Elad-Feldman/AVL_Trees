@@ -159,13 +159,46 @@ public class testNode {
         tree.printTree();
 
 
+
     }
-    public void printBalancedTree() {
+    @Test
+    public void testRotation() {
         printableTree tree = new printableTree();
-        int[] values = {5, 8, 9, 2, 6, 7};
+        int[] values = { 1 ,2 ,3 ,4, 5, 6, 7, 8};
+//        int[] values = {5, 6 ,7,8,9,10,12};
+//        for (int val : values) {
+//            String info = Integer.toString(val);
+//            tree.insert(val, info);
+//            tree.printTree();
+
+
+//    int[] values = new int[] {20,8, 17,1,39 ,14, 12,2 ,10, 6 ,3 ,29};
+//    int[] values = new int[] {20,8,9};
+//        int[] values = new int[] {2,8,5};
+
+
         for (int val : values) {
             String info = Integer.toString(val);
-            tree.insert(val, info);
+            int x = tree.insert(val, info);
+            System.out.println(x+ " balanced actions");
+            tree.printTree();
         }
+//        tree.printTree();
+//        AVLTree.IAVLNode x = tree.getRoot().getRight();
+//        tree.RotateRight(x);
+//        tree.printTree();
+//        x = tree.getRoot().getRight();
+//        tree.RotateRight(x);
+
+
+//        tree.printTree();
+//        tree.balanceTree(x,0);
+////        AVLTree.IAVLNode x = tree.getRoot();
+
+//        tree.printTree();
+//        AVLTree.IAVLNode y = tree.getRoot().getRight();
+//
+
+
     }
     }
