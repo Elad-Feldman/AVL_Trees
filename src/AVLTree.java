@@ -1,4 +1,4 @@
-
+import java.util.Arrays;
 
 /**
  *
@@ -114,21 +114,33 @@ public class AVLTree {
 	}
 	public int balanceTree(IAVLNode node, int balance_actions){
 
+
 		if (!node.isRealNode() || balance_actions>this.size()+10) { //got up to parent
 
 			return balance_actions;
 		}
-		int diff = Rankdiff(node);
-		if (diff==2){
-			balance_actions++;
-//			System.out.println("STOPP");
-			RotateRight(node);
+		int Bcase = findBalanceCase(node);
+		balance_actions++;
+		updateHeight(node);
 
+//
+		if (Bcase == 2){
+			balance_actions++;
+			RotateRight(node);
 		}
-		if (diff==-2){
+		if (Bcase == 3) {
+			balance_actions=balance_actions+2;
+			doubleRightRotation(node) ;
+		}
+
+
+		if (Bcase == -2){
 			balance_actions++;
 			RotateLeft(node);
-
+		}
+		if (Bcase == -3) {
+			balance_actions=balance_actions+2;
+			doubleLeftRotation(node) ;
 		}
 //		System.out.println(node.getKey()+"-->"+node.getParent().getKey());
 		return balanceTree( node.getParent(),balance_actions );
@@ -370,6 +382,8 @@ public class AVLTree {
 
 
 		swtichParents(p,x,y);
+		updateHeight(y);
+		updateHeight(x);
 
 
 	}
@@ -383,6 +397,10 @@ public class AVLTree {
 		x.setLeft(y);
 		y.setParent(x);
 		swtichParents(p,y,x);
+		updateHeight(x);
+		updateHeight(y);
+
+
 
 
 
@@ -407,7 +425,9 @@ public class AVLTree {
 		x.setLeft(z);
 		x.setRight(y);
 		swtichParents(p,z,x);
-		//TODO balance z
+		updateHeight(z);
+		updateHeight(y);
+		updateHeight(x);
 
 
 	}
@@ -434,7 +454,9 @@ public class AVLTree {
 		x.setLeft(y);
 
 		swtichParents(p,z,x);
-		//TODO balance z
+		updateHeight(z);
+		updateHeight(y);
+		updateHeight(x);
 
 
 	}
@@ -461,11 +483,53 @@ public class AVLTree {
 
 	}
 
-	private int Rankdiff(AVLTree.IAVLNode node){
-//		int[] rankdiff  = new int[2];
-//		rankdiff[0] = node.getHeight() - node.getLeft().getHeight();
-//		rankdiff[1] node.getHeight() - node.getRight().getHeight();
-		return node.getLeft().getHeight() -node.getRight().getHeight();
+	public int[] rankDiff(IAVLNode node ){
+		int[] rankdiff  = new int[2];
+		rankdiff[0] = node.getHeight() - node.getLeft().getHeight();
+		rankdiff[1] = node.getHeight() - node.getRight().getHeight();
+		return rankdiff;
+	}
+
+	public int findBalanceCase(IAVLNode node){
+		int[] diff =rankDiff(node);
+
+		//promote up
+		if ((diff[0]==0) && (diff[1]==1)){return 1;}
+		if ((diff[0]==1) && (diff[1]==0)){return 1;}
+
+
+		if ((diff[0]==0) && (diff[1]==2)){
+			int[] diffLeft = rankDiff(node.getLeft());
+			if ((diffLeft[0]==1) && (diffLeft[1]==2)){return 2;} //rotate right
+			if ((diffLeft[0]==2) && (diffLeft[1]==1)){return -3;} // Double rotate right
+		}
+
+		if ((diff[0]==2) && (diff[1]==0)){
+
+			int[] diffRight = rankDiff(node.getRight());
+			if ((diffRight[0]==2) && (diffRight[1]==1)){return -2;} //rotate left
+			if ((diffRight[0]==1) && (diffRight[1]==2)){return 3;} // Double rotate left
+		}
+
+		return 1;
+
+
+
+	}
+
+	public void updateHeight(IAVLNode node){
+		node.setHeight(1 + Math.max(node.getLeft().getHeight(), node.getRight().getHeight() ) );
+
+	}
+
+	public boolean isAVLTree(IAVLNode node){
+		return true; //TODO write test, to check on every itration
+
+
+	}
+
+	public void printDiff(IAVLNode node){
+		System.out.println("k:"+node.getKey()+", dif: "+ Arrays.toString(rankDiff(node))+" ,case:"+ findBalanceCase(node));
 	}
 
 
@@ -497,6 +561,7 @@ public class AVLTree {
 		void setHeight(int height); // sets the height of the node
 
 		int getHeight(); // Returns the height of the node (-1 for virtual nodes)
+
 
 
 //		String getText();
@@ -551,7 +616,7 @@ public class AVLTree {
 		public void setLeft(IAVLNode node) {
 			this.left = node;
 			this.left.setParent(this);
-//			this.setHeight(1 + Math.max(this.left.getHeight(), this.right.getHeight() ) );
+//
 
 
 
@@ -593,13 +658,12 @@ public class AVLTree {
 		public void setHeight(int height) {
 				this.height = height;
 				IAVLNode p = this.getParent();
-				if (p.isRealNode()) {
-					p.setHeight(1 + Math.max(p.getLeft().getHeight(), p.getRight().getHeight()));
+//				if (p.isRealNode()) {
+//					p.setHeight(1 + Math.max(p.getLeft().getHeight(), p.getRight().getHeight()));
 
-				}
+//				}
 
 		}
-
 
 
 
@@ -607,13 +671,12 @@ public class AVLTree {
 			return this.height;
 		}
 
-//		public String getText() {
-//			String txt = "" + this.key;
-//			return txt;
+
+
+
 		}
 
-
-	}
+}
 
 
 

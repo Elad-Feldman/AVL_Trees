@@ -1,8 +1,14 @@
 import org.junit.Assert;
 import org.junit.Test;
+
 import java.util.Random;
 
+
+
 public class testNode {
+    String kh = "kh";
+    String dif = "d";
+    String khd = "khd";
 
 
     @Test
@@ -102,14 +108,13 @@ public class testNode {
     @Test
     public void createTree2() {
         printableTree tree = new printableTree();
-        int [] values = {12, 75, 50,6, 65, 55, 25};
-        for (int val:values){
+        int[] values = {12, 75, 50, 6, 65, 55, 25};
+        for (int val : values) {
             String info = Integer.toString(val);
 
             tree.insert(val, info);
-            tree.printTree();
+            tree.printTree(dif);
         }
-
 
 
         Assert.assertEquals("75", tree.max());
@@ -117,8 +122,8 @@ public class testNode {
         Assert.assertEquals(7, tree.size());
 //        System.out.println(Arrays.toString(tree.keysToArray()));
 //        System.out.println(Arrays.toString(tree.infoToArray()));
-        Assert.assertArrayEquals(new int[]{6,12, 25, 50, 55, 65, 75}, tree.keysToArray());
-        Assert.assertArrayEquals(new String[]{"6","12", "25", "50", "55", "65", "75"}, tree.infoToArray());
+        Assert.assertArrayEquals(new int[]{6, 12, 25, 50, 55, 65, 75}, tree.keysToArray());
+        Assert.assertArrayEquals(new String[]{"6", "12", "25", "50", "55", "65", "75"}, tree.infoToArray());
 
         Assert.assertEquals("12", tree.search(12));
         Assert.assertEquals(12, tree.getRoot().getKey());
@@ -131,9 +136,9 @@ public class testNode {
 
 
         AVLTree.IAVLNode s1 = tree.findSuccessor(tree.getRoot());
-        int[] pre= {25, 50, 55, 65, 75}; //no root
+        int[] pre = {25, 50, 55, 65, 75}; //no root
 //        Arrays.sort(pre);
-        for (int val:pre) {
+        for (int val : pre) {
             Assert.assertEquals(val, s1.getKey());
             s1 = tree.findSuccessor(s1);
         }
@@ -141,29 +146,29 @@ public class testNode {
 //
 
 
-
-
     }
 
     @Test
-    public void printRandomTree(){
-        int n =20;
+    public void printRandomTree() {
+        int n = 15;
         printableTree tree = new printableTree();
         Random rand = new Random();
-        for (int i=0;i<n;i++){
-            int val =  rand.nextInt(n);
+        for (int i = 0; i < n; i++) {
+            int val = rand.nextInt(n);
             String info = Integer.toString(val);
-                 tree.insert(val, info);
-        }
-        tree.printTree();
+            int x = tree.insert(val, info);
+            tree.printTree(dif);
+            System.out.println("----------------------------TOOK " + x + " ACTIONS----------------------------");
 
+        }
 
 
     }
+
     @Test
     public void testRotation() {
         printableTree tree = new printableTree();
-        int[] values = { 1 ,2 ,3 ,4, 5, 6, 7, 8, 20, 50, 100};
+        int[] values = {1, 2, 3, 4, 5, 6, 7, 8, 20, 50, 100};
 //        int[] values = {5, 6 ,7,8,9,10,12};
 //        for (int val : values) {
 //            String info = Integer.toString(val);
@@ -179,22 +184,22 @@ public class testNode {
         for (int val : values) {
             String info = Integer.toString(val);
             int x = tree.insert(val, info);
-            System.out.println(x+ " balanced actions");
-            tree.printTree();
+            System.out.println(x + " balanced actions");
+            tree.printTree(kh);
         }
-//        tree.printTree();
+//        tree.printTree(kh);
 //        AVLTree.IAVLNode x = tree.getRoot().getRight();
 //        tree.RotateRight(x);
-//        tree.printTree();
+//        tree.printTree(kh);
 //        x = tree.getRoot().getRight();
 //        tree.RotateRight(x);
 
 
-//        tree.printTree();
+//        tree.printTree(kh);
 //        tree.balanceTree(x,0);
 ////        AVLTree.IAVLNode x = tree.getRoot();
 
-//        tree.printTree();
+//        tree.printTree(kh);
 //        AVLTree.IAVLNode y = tree.getRoot().getRight();
 //
 
@@ -208,24 +213,49 @@ public class testNode {
 
         for (int val : values) {
             String info = Integer.toString(val);
-            tree.insert(val, info);
+            int x = tree.insert(val, info);
+            System.out.println("took " + x + " actions");
+            tree.printTree("kh");
         }
-            tree.printTree();
-            tree.doubleRightRotation(tree.getRoot());
-            tree.printTree();
-        }
+    }
 
     @Test
     public void TestDLR() {
         printableTree tree = new printableTree();
-        int[] values = {10,5,7};
+        int[] values = {10, 5, 7};
 
         for (int val : values) {
             String info = Integer.toString(val);
-            tree.insert(val, info);
+            int x = tree.insert(val, info);
+            System.out.println("took " + x + " actions");
+            tree.printTree("kh");
         }
-        tree.printTree();
-        tree.doubleLeftRotation(tree.getRoot());
-        tree.printTree();
     }
+
+    @Test
+    public void printFullTree() {
+        printableTree tree = new printableTree();
+        int[] values = {1,2,3,4,5,6,7,8,9,10,11,12};
+        shuffleArray(values);
+        for (int val : values) {
+            String info = Integer.toString(val);
+            int x = tree.insert(val, info);
+            tree.printTree(khd);
+            System.out.println("----------------------------TOOK " + x + " ACTIONS----------------------------");
+        }
     }
+
+    public void shuffleArray(int[] array) {
+        Random rand = new Random();
+
+        for (int i = 0; i < array.length; i++) {
+            int randomIndexToSwap = rand.nextInt(array.length);
+            int temp = array[randomIndexToSwap];
+            array[randomIndexToSwap] = array[i];
+            array[i] = temp;
+
+
+        }
+    }
+}
+

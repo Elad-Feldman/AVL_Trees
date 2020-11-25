@@ -2,11 +2,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class printableTree extends AVLTree {
-    int WHAT_TO_PRINT =2 ;
-    //you should implement IAVLnode
+     //you should implement IAVLnode
     // you should write insert(k, info)
+    public String getText(IAVLNode node, String what2print){
+         String result="";
 
-    public void printTree() {
+        if (node.isRealNode()){
+            int h = node.getHeight();
+            int[] diff = rankDiff(node);
+            int key = node.getKey();
+
+            if (what2print=="d")
+                return "(" +diff[0]+ ","+ diff[1] + ")";
+            if (what2print=="kh")
+                return  "(k"+ key +",h:"+h+")";
+            if (what2print=="khd")
+                return  +diff[0]- diff[1] + ","+key;
+
+        }
+        return "*";
+
+    }
+
+    public void printTree(String what2print) {
         IAVLNode root = this.getRoot();
         List<List<String>> lines = new ArrayList<List<String>>();
 
@@ -30,7 +48,7 @@ public class printableTree extends AVLTree {
                     next.add(null);
                     next.add(null);
                 } else {
-                    String aa = getText(n);
+                    String aa = getText(n,what2print);
                     line.add(aa);
                     if (aa.length() > widest) widest = aa.length();
 
@@ -113,27 +131,5 @@ public class printableTree extends AVLTree {
         }
     }
 
-    public String getText(IAVLNode node){
-        int what = WHAT_TO_PRINT;
-        String result="";
 
-        if (node.isRealNode()){
-            int h = node.getHeight();
-            int diff = (node.getLeft().getHeight()-node.getRight().getHeight());
-            int key = node.getKey();
-
-            if (what==0)
-                    return "("+diff+ ")";
-            if (what==1)
-                     return "(" + (h-node.getLeft().getHeight())+ ","+ (h-node.getRight().getHeight()) + ")";
-            if (what==2)
-                    return  "("+ key +","+h+")";
-
-            }
-
-//
-
-        return "*";
-
-    }
 }
