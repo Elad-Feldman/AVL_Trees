@@ -40,8 +40,8 @@ public class AVLTree {
 	}
 
 	private IAVLNode findNodeByKey(IAVLNode node, int k) {
-		System.out.println(node.getKey());
-		if ((node.isRealNode() == false) ||  (node.getKey() == k)) {
+//		System.out.println(node.getKey());
+		if ((!node.isRealNode()) ||  (node.getKey() == k)) {
 			return node; //return virtual node
 
 			}
@@ -119,9 +119,10 @@ public class AVLTree {
 
 			return balance_actions;
 		}
-		int Bcase = findBalanceCase(node);
+//		node.printDiff();
+		int Bcase = node.balancedCase();
 		balance_actions++;
-		updateHeight(node);
+		node.setHeight();
 
 //
 		if (Bcase == 2){
@@ -158,22 +159,47 @@ public class AVLTree {
 	 * returns -1 if an item with key k was not found in the tree.
 	 */
 	public int delete(int k) {
-//		IAVLNode node = findLastNodeEncountered(this.root, k);
-//		if (node.getKey() !=k) // not in tree
-//			return -1;
-//
-//		switch (isLeaf(node)) {
-//			case "leaf":
-//				node = new IAVLNode();
-//				break;
-//			case "rightChild":
-//				return 5;
-//
-//		}
+
+
+		IAVLNode node = findLastNodeEncountered(this.root, k);
+		if (node.getKey() !=k) // not in tree
+			return -1;
+
+		this.size--;
+		IAVLNode p = node.getParent();
+		IAVLNode vir = new AVLNode();
+
+		int numchild = node.numberOfChildren();
+
+		if (numchild==0) {
+			swtichParents(p, node, vir);
+			return  balanceTree(p,0);
+		}
+
+		if (numchild==1) {
+			swtichParents(p, node, node.getRight());
+			return  balanceTree(p,0);
+		}
+		if (numchild == -1) {
+			swtichParents(p, node, node.getLeft());
+			return  balanceTree(p,0);
+		}
+		if (numchild == 2) {
+			IAVLNode successor = findSuccessor(node);
+			IAVLNode successorSon = successor.getRight(); // TODO  if we want down, there is another case
+			IAVLNode successorParent = successor.getParent();
+			swtichParents(successorParent, successor, successorSon); //remove successor
+			successor.setRight(node.getRight());
+			successor.setLeft(node.getLeft());
+			swtichParents(p, node, successor); //remove successor
+			return  balanceTree(successorParent,0);
+		}
 
 
 
-		return 42;    // to be replaced by student code
+//		p.setHeight();
+
+		return -1;    // to be replaced by student code
 	}
 
 	public IAVLNode findSuccessor(IAVLNode node){
@@ -181,7 +207,7 @@ public class AVLTree {
 			return minNode(node.getRight());
 		}
 		IAVLNode parent = node.getParent();
-		System.out.println(parent.getKey()+","+node.getKey() );
+//		System.out.println(parent.getKey()+","+node.getKey() );
 		while ((parent.isRealNode()) && (node.equals(parent.getRight()) ) ) {
 
 			node = parent;
@@ -197,6 +223,9 @@ public class AVLTree {
 	 * or null if the tree is empty
 	 */
 	public String min() {
+
+		if (!root.isRealNode())
+			return null;
 		return minNode(this.getRoot()).getValue();
 	}
 	private IAVLNode minNode(IAVLNode node){
@@ -213,6 +242,8 @@ public class AVLTree {
 	 * or null if the tree is empty
 	 */
 	public String max() {
+		if (!root.isRealNode())
+			return null;
 		IAVLNode node = this.root;
 		while (node.getRight().isRealNode()) {
 			node = node.getRight();
@@ -336,7 +367,7 @@ public class AVLTree {
 			return null;
 
 		if (root.getKey() == k) {
-			System.out.println(root.getKey());
+//			System.out.println(root.getKey());
 			return root.getValue();
 		}
 
@@ -382,8 +413,8 @@ public class AVLTree {
 
 
 		swtichParents(p,x,y);
-		updateHeight(y);
-		updateHeight(x);
+		y.setHeight();
+		x.setHeight();
 
 
 	}
@@ -397,8 +428,8 @@ public class AVLTree {
 		x.setLeft(y);
 		y.setParent(x);
 		swtichParents(p,y,x);
-		updateHeight(x);
-		updateHeight(y);
+		x.setHeight();
+		y.setHeight();
 
 
 
@@ -425,9 +456,9 @@ public class AVLTree {
 		x.setLeft(z);
 		x.setRight(y);
 		swtichParents(p,z,x);
-		updateHeight(z);
-		updateHeight(y);
-		updateHeight(x);
+		z.setHeight();
+		y.setHeight();
+		x.setHeight();
 
 
 	}
@@ -454,9 +485,9 @@ public class AVLTree {
 		x.setLeft(y);
 
 		swtichParents(p,z,x);
-		updateHeight(z);
-		updateHeight(y);
-		updateHeight(x);
+		z.setHeight();
+		y.setHeight();
+		x.setHeight();
 
 
 	}
@@ -467,60 +498,17 @@ public class AVLTree {
 			if (p.getLeft().getKey() == oldNode.getKey()){// include setParent
 				p.setLeft(newNode);
 			}
-
 			else{
 				p.setRight(newNode);
-
 			}
-
-
 		}
 		else{
 			newNode.setParent(p);
-
 			this.root =newNode;
 		}
-
 	}
 
-	public int[] rankDiff(IAVLNode node ){
-		int[] rankdiff  = new int[2];
-		rankdiff[0] = node.getHeight() - node.getLeft().getHeight();
-		rankdiff[1] = node.getHeight() - node.getRight().getHeight();
-		return rankdiff;
-	}
 
-	public int findBalanceCase(IAVLNode node){
-		int[] diff =rankDiff(node);
-
-		//promote up
-		if ((diff[0]==0) && (diff[1]==1)){return 1;}
-		if ((diff[0]==1) && (diff[1]==0)){return 1;}
-
-
-		if ((diff[0]==0) && (diff[1]==2)){
-			int[] diffLeft = rankDiff(node.getLeft());
-			if ((diffLeft[0]==1) && (diffLeft[1]==2)){return 2;} //rotate right
-			if ((diffLeft[0]==2) && (diffLeft[1]==1)){return -3;} // Double rotate right
-		}
-
-		if ((diff[0]==2) && (diff[1]==0)){
-
-			int[] diffRight = rankDiff(node.getRight());
-			if ((diffRight[0]==2) && (diffRight[1]==1)){return -2;} //rotate left
-			if ((diffRight[0]==1) && (diffRight[1]==2)){return 3;} // Double rotate left
-		}
-
-		return 1;
-
-
-
-	}
-
-	public void updateHeight(IAVLNode node){
-		node.setHeight(1 + Math.max(node.getLeft().getHeight(), node.getRight().getHeight() ) );
-
-	}
 
 	public boolean isAVLTree(IAVLNode node){
 		return true; //TODO write test, to check on every itration
@@ -528,9 +516,7 @@ public class AVLTree {
 
 	}
 
-	public void printDiff(IAVLNode node){
-		System.out.println("k:"+node.getKey()+", dif: "+ Arrays.toString(rankDiff(node))+" ,case:"+ findBalanceCase(node));
-	}
+
 
 
 
@@ -561,6 +547,16 @@ public class AVLTree {
 		void setHeight(int height); // sets the height of the node
 
 		int getHeight(); // Returns the height of the node (-1 for virtual nodes)
+
+		int[] rankDiff();
+
+		void setHeight();
+
+		int balancedCase();
+
+		void printDiff();
+
+		int numberOfChildren();
 
 
 
@@ -665,10 +661,56 @@ public class AVLTree {
 
 		}
 
+		public void setHeight(){
+			this.setHeight(1 + Math.max(this.getLeft().getHeight(), this.getRight().getHeight() ) );
+
+		}
+
 
 
 		public int getHeight() {
 			return this.height;
+		}
+
+		public int[] rankDiff( ){
+			int[] rankdiff  = new int[2];
+			rankdiff[0] = this.getHeight() - this.getLeft().getHeight();
+			rankdiff[1] = this.getHeight() - this.getRight().getHeight();
+			return rankdiff;
+		}
+
+		public int balancedCase(){
+			int[] diff =this.rankDiff();
+
+
+			if (((diff[0]==0) && (diff[1]==2)) || ((diff[0]==1) && (diff[1]==3))){
+				int[] diffLeft = this.getLeft().rankDiff();
+				if ((diffLeft[0]==1) && (diffLeft[1]==1)){return 2;} //rotate right
+				if ((diffLeft[0]==1) && (diffLeft[1]==2)){return 2;} //rotate right
+				if ((diffLeft[0]==2) && (diffLeft[1]==1)){return -3;} // Double rotate right
+			}
+
+			if (((diff[0]==2) && (diff[1]==0)) || ((diff[0]==3) && (diff[1]==1))){
+
+				int[] diffRight = this.getRight().rankDiff();
+				if ((diffRight[0]==1) && (diffRight[1]==1)){return -2;} //rotate left
+				if ((diffRight[0]==2) && (diffRight[1]==1)){return -2;} //rotate left
+				if ((diffRight[0]==1) && (diffRight[1]==2)){return 3;} // Double rotate left
+			}
+
+			return 1;
+		}
+
+		public void printDiff(){
+			System.out.println("k:"+this.getKey()+", dif: "+ Arrays.toString(this.rankDiff())+" ,case:"+ this.balancedCase());
+		}
+
+		public int numberOfChildren(){
+			if((this.getLeft().isRealNode()) && (this.getRight().isRealNode())){return 2;}
+			if(this.getLeft().isRealNode() ){return -1;}
+			if(this.getRight().isRealNode()){return 1;}
+			return 0;
+
 		}
 
 

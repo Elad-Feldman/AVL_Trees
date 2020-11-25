@@ -9,7 +9,7 @@ public class printableTree extends AVLTree {
 
         if (node.isRealNode()){
             int h = node.getHeight();
-            int[] diff = rankDiff(node);
+            int[] diff =node.rankDiff();
             int key = node.getKey();
 
             if (what2print=="d")
@@ -18,6 +18,8 @@ public class printableTree extends AVLTree {
                 return  "(k"+ key +",h:"+h+")";
             if (what2print=="khd")
                 return  +diff[0]- diff[1] + ","+key;
+            if (what2print=="")
+                return  ""+key;
 
         }
         return "*";
@@ -70,7 +72,7 @@ public class printableTree extends AVLTree {
             next.clear();
         }
 
-        int perpiece = lines.get(lines.size() - 2).size() * (widest+4);
+        int perpiece = lines.get(lines.size()-2).size() * (widest+8);
         for (int i = 0; i < lines.size(); i++) {
             List<String> line = lines.get(i);
             int hpw = (int) Math.floor(perpiece / 2f) - 1;

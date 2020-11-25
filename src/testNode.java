@@ -222,20 +222,22 @@ public class testNode {
     @Test
     public void TestDLR() {
         printableTree tree = new printableTree();
-        int[] values = {10, 5, 7};
+        int[] values = {4, 2, 9, 12, 10, 11};
 
         for (int val : values) {
             String info = Integer.toString(val);
             int x = tree.insert(val, info);
             System.out.println("took " + x + " actions");
-            tree.printTree("kh");
+            tree.printTree("");
+
         }
+
     }
 
     @Test
     public void printFullTree() {
         printableTree tree = new printableTree();
-        int[] values = {1,2,3,4,5,6,7,8,9,10,11,12};
+        int[] values = createshuffedArrSize(20);
         shuffleArray(values);
         for (int val : values) {
             String info = Integer.toString(val);
@@ -245,17 +247,135 @@ public class testNode {
         }
     }
 
-    public void shuffleArray(int[] array) {
-        Random rand = new Random();
+    @Test
+    public void TestRoot() {
+        printableTree tree = new printableTree();
+        //should print two trees of size 1, only the root
+        tree.insert(1, "1");
+        tree.printTree(kh);
+        tree.delete(1);
+        tree.insert(2, "2");
 
-        for (int i = 0; i < array.length; i++) {
-            int randomIndexToSwap = rand.nextInt(array.length);
-            int temp = array[randomIndexToSwap];
-            array[randomIndexToSwap] = array[i];
-            array[i] = temp;
+        tree.printTree(kh);
+    }
 
+    @Test
+    public void TestDeleteLeaf() {
+        printableTree tree = new printableTree();
+        int[] values = {1, 2};
+        for (int val : values) {
+            String info = Integer.toString(val);
+            int x = tree.insert(val, info);
+        }
+        tree.printTree(kh);
+        tree.delete(3);
+        tree.delete(2);
+//        int x = tree.insert(2, "2");
+
+        tree.printTree(kh);
+    }
+
+    @Test
+    public void TestDeleteWithRightChild() {
+        printableTree tree = new printableTree();
+        int[] values = {1, 2, 3, 5};
+        for (int val : values) {
+            String info = Integer.toString(val);
+            int x = tree.insert(val, info);
+        }
+        tree.printTree(kh);
+        tree.delete(3);
+
+        tree.printTree(kh);
+    }
+
+    @Test
+    public void TestDeleteWithLeftChild() {
+        printableTree tree = new printableTree();
+        int[] values = createArrSize(8);
+        for (int val : values) {
+            String info = Integer.toString(val);
+            int x = tree.insert(val, info);
+        }
+        tree.printTree(kh);
+        tree.delete(4);
+
+        tree.printTree(dif);
+    }
+
+    @Test
+    public void TestDeleteWithTwoChild() {
+        printableTree tree = new printableTree();
+        int[] values = {1, 2, 3, 4, 5, 6, 7, 8, 9, 13, 14, 15, 16, 17, 18, 19, 29};//createArrSize(20);
+        for (int val : values) {
+            String info = Integer.toString(val);
+            int x = tree.insert(val, info);
+        }
+        tree.printTree(kh);
+        tree.delete(15);
+
+        tree.printTree(kh);
+    }
+
+    @Test
+    public void TestMinMax() {
+        Assert.assertTrue(min());
+        Assert.assertTrue(max());
+    }
+
+
+    public boolean min() {
+        AVLTree avlTree = new AVLTree();
+        if (avlTree.min() != null) {
+            return false;
+        }
+        for (int i = 0; i < 100; i++) {
+            avlTree.insert(i, "num" + i);
+        }
+        return (avlTree.min().equals("num0"));
+    }
+
+    public boolean max() {
+        AVLTree avlTree = new AVLTree();
+        if (avlTree.max() != null) {
+            return false;
+        }
+        for (int i = 0; i < 100; i++) {
+            avlTree.insert(i, "num" + i);
+        }
+        return (avlTree.max().equals("num99"));
+    }
+
+        public void shuffleArray ( int[] array){
+            Random rand = new Random();
+
+            for (int i = 0; i < array.length; i++) {
+                int randomIndexToSwap = rand.nextInt(array.length);
+                int temp = array[randomIndexToSwap];
+                array[randomIndexToSwap] = array[i];
+                array[i] = temp;
+
+
+            }
+        }
+
+        public int[] createArrSize ( int n){
+            int[] arr = new int[n];
+            for (int i = 0; i < n; i++) {
+                arr[i] = i;
+            }
+            return arr;
+        }
+
+        public int[] createshuffedArrSize ( int n){
+            int[] arr = new int[n];
+            for (int i = 0; i < n; i++) {
+                arr[i] = i;
+            }
+            shuffleArray(arr);
+            return arr;
 
         }
     }
-}
+
 
