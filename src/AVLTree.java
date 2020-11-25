@@ -1,5 +1,5 @@
 import java.util.Arrays;
-
+/// Written by Elad Feldman 25/11/2020
 /**
  *
  * AVLTree
@@ -247,7 +247,6 @@ public class AVLTree {
 		return arr;              // to be replaced by student code
 	}
 
-
 	/**
 	 * public String[] infoToArray()
 	 * <p>
@@ -335,7 +334,6 @@ public class AVLTree {
 		return this.root.getHeight();
 	}
 
-
 	public void RotateRight( AVLTree.IAVLNode x){
 		AVLTree.IAVLNode y = x.getLeft();
 		AVLTree.IAVLNode b = y.getRight();
@@ -353,6 +351,7 @@ public class AVLTree {
 
 
 	}
+
 	public void RotateLeft( AVLTree.IAVLNode y){
 		AVLTree.IAVLNode x = y.getRight();
 		AVLTree.IAVLNode b = x.getLeft();
@@ -449,10 +448,7 @@ public class AVLTree {
 		return true; //TODO write test, to check on every itration
 
 
-	}
-
-
-
+	} //TODO
 
 
 
