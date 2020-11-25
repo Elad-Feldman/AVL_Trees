@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class printableTree extends AVLTree {
+    int WHAT_TO_PRINT =2 ;
     //you should implement IAVLnode
     // you should write insert(k, info)
 
@@ -113,7 +114,7 @@ public class printableTree extends AVLTree {
     }
 
     public String getText(IAVLNode node){
-        int what = 1;
+        int what = WHAT_TO_PRINT;
         String result="";
 
         if (node.isRealNode()){

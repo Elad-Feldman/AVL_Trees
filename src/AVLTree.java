@@ -371,6 +371,7 @@ public class AVLTree {
 
 		swtichParents(p,x,y);
 
+
 	}
 	public void RotateLeft( AVLTree.IAVLNode y){
 		AVLTree.IAVLNode x = y.getRight();
@@ -388,6 +389,56 @@ public class AVLTree {
 
 
 	}
+
+	public void doubleRightRotation ( AVLTree.IAVLNode z){
+		AVLTree.IAVLNode p = z.getParent();
+
+		AVLTree.IAVLNode a = z.getLeft();
+		AVLTree.IAVLNode y = z.getRight();
+
+		AVLTree.IAVLNode b =y.getLeft();
+		AVLTree.IAVLNode x = y.getLeft();
+
+		AVLTree.IAVLNode c = x.getLeft();
+		AVLTree.IAVLNode d = x.getRight();
+
+		z.setRight(c);
+		y.setLeft(d);
+		x.setLeft(z);
+		x.setRight(y);
+		swtichParents(p,z,x);
+		//TODO balance z
+
+
+	}
+
+	public void doubleLeftRotation ( AVLTree.IAVLNode z){
+		AVLTree.IAVLNode p = z.getParent();
+
+		AVLTree.IAVLNode a = z.getRight();
+		AVLTree.IAVLNode y = z.getLeft();
+
+
+
+		AVLTree.IAVLNode x = y.getRight();
+		AVLTree.IAVLNode b =y.getLeft();
+
+
+		AVLTree.IAVLNode d = x.getRight();
+		AVLTree.IAVLNode c = x.getLeft();
+
+		y.setRight(c);
+		z.setLeft(d);
+
+		x.setRight(z);
+		x.setLeft(y);
+
+		swtichParents(p,z,x);
+		//TODO balance z
+
+
+	}
+
 	private void swtichParents(IAVLNode p, IAVLNode oldNode,IAVLNode newNode) {
 
 		if (p.isRealNode()){
@@ -411,6 +462,9 @@ public class AVLTree {
 	}
 
 	private int Rankdiff(AVLTree.IAVLNode node){
+//		int[] rankdiff  = new int[2];
+//		rankdiff[0] = node.getHeight() - node.getLeft().getHeight();
+//		rankdiff[1] node.getHeight() - node.getRight().getHeight();
 		return node.getLeft().getHeight() -node.getRight().getHeight();
 	}
 
@@ -496,8 +550,9 @@ public class AVLTree {
 
 		public void setLeft(IAVLNode node) {
 			this.left = node;
-			this.setHeight(1 + Math.max(this.left.getHeight(), this.right.getHeight() ) );
 			this.left.setParent(this);
+//			this.setHeight(1 + Math.max(this.left.getHeight(), this.right.getHeight() ) );
+
 
 
 
@@ -512,9 +567,9 @@ public class AVLTree {
 
 		public void setRight(IAVLNode node) {
 			this.right = node;
-
-			this.setHeight(1 + Math.max(this.left.getHeight(), this.right.getHeight() ) );
 			this.right.setParent(this);
+			this.setHeight(1 + Math.max(this.left.getHeight(), this.right.getHeight() ) );
+
 		}
 
 		public IAVLNode getRight() {

@@ -92,9 +92,6 @@ public class testNode {
         Assert.assertArrayEquals(new int[]{12, 25, 50, 55, 65, 75}, tree.keysToArray());
         Assert.assertArrayEquals(new String[]{"12", "25", "50", "55", "65", "75"}, tree.infoToArray());
         AVLTree.IAVLNode s1 = tree.findSuccessor(tree.getRoot());
-        Assert.assertEquals(55, s1.getKey());
-        s1 = tree.findSuccessor(s1);
-        Assert.assertEquals(65, s1.getKey());
 
 
 //        TreePrinter.printTree(tree.getRoot());
@@ -108,9 +105,11 @@ public class testNode {
         int [] values = {12, 75, 50,6, 65, 55, 25};
         for (int val:values){
             String info = Integer.toString(val);
+
             tree.insert(val, info);
+            tree.printTree();
         }
-        tree.printTree();
+
 
 
         Assert.assertEquals("75", tree.max());
@@ -164,7 +163,7 @@ public class testNode {
     @Test
     public void testRotation() {
         printableTree tree = new printableTree();
-        int[] values = { 1 ,2 ,3 ,4, 5, 6, 7, 8};
+        int[] values = { 1 ,2 ,3 ,4, 5, 6, 7, 8, 20, 50, 100};
 //        int[] values = {5, 6 ,7,8,9,10,12};
 //        for (int val : values) {
 //            String info = Integer.toString(val);
@@ -200,5 +199,33 @@ public class testNode {
 //
 
 
+    }
+
+    @Test
+    public void TestDRR() {
+        printableTree tree = new printableTree();
+        int[] values = {5, 10, 7};
+
+        for (int val : values) {
+            String info = Integer.toString(val);
+            tree.insert(val, info);
+        }
+            tree.printTree();
+            tree.doubleRightRotation(tree.getRoot());
+            tree.printTree();
+        }
+
+    @Test
+    public void TestDLR() {
+        printableTree tree = new printableTree();
+        int[] values = {10,5,7};
+
+        for (int val : values) {
+            String info = Integer.toString(val);
+            tree.insert(val, info);
+        }
+        tree.printTree();
+        tree.doubleLeftRotation(tree.getRoot());
+        tree.printTree();
     }
     }
