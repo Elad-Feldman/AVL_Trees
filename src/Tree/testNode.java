@@ -38,8 +38,6 @@ public class testNode {
         Assert.assertFalse(n2.getLeft().isRealNode());
 
 
-
-
     }
 
     @Test
@@ -237,7 +235,7 @@ public class testNode {
     @Test
     public void printFullTree() {
         printableTree tree = new printableTree();
-        int[] values =createshuffedArrSize(20); //{ 11,10,9,6,5,4,2,};
+        int[] values ={ 11,10,9,6,5,4,2};//; createshuffedArrSize(20);
         shuffleArray(values);
         for (int val : values) {
             String info = Integer.toString(val);
@@ -245,7 +243,7 @@ public class testNode {
 
             System.out.println("----------------------------TOOK " + x + " ACTIONS----------------------------");
         }
-        tree.printTree(kh);
+        tree.printTree("sk");
     }
 
     @Test
@@ -293,7 +291,7 @@ public class testNode {
     @Test
     public void TestDeleteWithLeftChild() {
         printableTree tree = new printableTree();
-        int[] values = {5,3,2,1};
+        int[] values = {5, 3, 2, 1};
         for (int val : values) {
             String info = Integer.toString(val);
             int x = tree.insert(val, info);
@@ -347,36 +345,55 @@ public class testNode {
         return (avlTree.max().equals("num99"));
     }
 
-        public void shuffleArray ( int[] array){
-            Random rand = new Random();
+    public void shuffleArray(int[] array) {
+        Random rand = new Random();
 
-            for (int i = 0; i < array.length; i++) {
-                int randomIndexToSwap = rand.nextInt(array.length);
-                int temp = array[randomIndexToSwap];
-                array[randomIndexToSwap] = array[i];
-                array[i] = temp;
+        for (int i = 0; i < array.length; i++) {
+            int randomIndexToSwap = rand.nextInt(array.length);
+            int temp = array[randomIndexToSwap];
+            array[randomIndexToSwap] = array[i];
+            array[i] = temp;
 
-
-            }
-        }
-
-        public int[] createArrSize ( int n){
-            int[] arr = new int[n];
-            for (int i = 0; i < n; i++) {
-                arr[i] = i;
-            }
-            return arr;
-        }
-
-        public int[] createshuffedArrSize ( int n){
-            int[] arr = new int[n];
-            for (int i = 0; i < n; i++) {
-                arr[i] = i;
-            }
-            shuffleArray(arr);
-            return arr;
 
         }
     }
+
+    public int[] createArrSize(int n) {
+        int[] arr = new int[n];
+        for (int i = 0; i < n; i++) {
+            arr[i] = i;
+        }
+        return arr;
+    }
+
+    public int[] createshuffedArrSize(int n) {
+        int[] arr = new int[n];
+        for (int i = 0; i < n; i++) {
+            arr[i] = i;
+        }
+        shuffleArray(arr);
+        return arr;
+
+    }
+
+
+    @Test
+    public void testFingerInsert(){
+        int x =0;
+        FingerTree tree = new FingerTree();
+        int[] values =  createshuffedArrSize(20); //{6,2,17,1,19,4,21,9};
+        for (int val : values) {
+            String info = Integer.toString(val);
+            tree.searchCount =0;
+            x = tree.insert_FINGER(val, info);
+            System.out.println(x);
+
+            }
+        tree.printTree(kh);
+
+    }
+
+
+}
 
 

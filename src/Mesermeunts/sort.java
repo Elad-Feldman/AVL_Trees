@@ -1,7 +1,6 @@
 package Mesermeunts;
 
-import Tree.AVLTree;
-import Tree.printableTree;
+import Tree.FingerTree;
 
 import java.util.Random;
 
@@ -12,10 +11,10 @@ public class sort {
     }
 
 
-    public static int insertion_Sort(int[] arr) {
+    public static long insertion_Sort(int[] arr) {
 
         int n = arr.length;
-        int count = 0;
+        long count = 0;
         int i, key, j;
         for (i = 1; i < n; i++) {
             key = arr[i];
@@ -35,37 +34,44 @@ public class sort {
         }
         return count;
     }
-    public static int AVLSort(int[] arr) {
-        AVLTree tree = new printableTree();
-        for (int val : arr) {
+    public static int AVLSort(int[] values) {
+//        System.out.println(Arrays.toString(values));
+//         values =  createshuffedArrSize(200);
+        int x=0;
+        FingerTree tree = new FingerTree();
+        for (int val : values) {
             String info = Integer.toString(val);
-            int x = tree.insert(val, info);
-
+            x = tree.insert_FINGER(val, info);
+//            System.out.println(x);
 
         }
-        return 0;
+//        tree.printTree("kh");
+        return x;
     }
+
 
 
 
     public static void main(String[] args){
         String SPACE ="        ";
         String SPACE2 ="                     ";
-        int n=100; //TODO n = 10000;
+        int n=10000; //TODO n = 10000;
 
-        int[] results = new int[4];
+        long[] results = new long[4];
 
 
         System.out.println("i"+SPACE+"insert_rand"+SPACE+"insert_desc"+SPACE+"avl_rand"+SPACE+"avl_desc");
-        for (int i=1;i<10;i++){
+        System.out.println("i"+SPACE+"insert_rand"+SPACE+"insert_desc"+SPACE+"avl_rand"+SPACE+"avl_desc");
+        for (int i=1;i<=10;i++){
             int[] randArray =createRandArray(n*i);
             int[] descArray = createDescArray(n*i);
+            results[2] = AVLSort(randArray);
+            results[3] = AVLSort(descArray);
 
             results[0] = insertion_Sort(randArray);
             results[1] = insertion_Sort(descArray);
+//
 
-            results[2] = AVLSort(randArray);
-            results[3] = AVLSort(descArray);
 
             System.out.println(i+SPACE+results[0]+SPACE2+results[1]+SPACE2+results[2]+SPACE2+results[3]);
 
@@ -98,7 +104,15 @@ public class sort {
 
         }
     }
+    public static int[] createshuffedArrSize(int n) {
+        int[] arr = new int[n];
+        for (int i = 0; i < n; i++) {
+            arr[i] = i;
+        }
+        shuffleArray(arr);
+        return arr;
 
+    }
     }
 
 

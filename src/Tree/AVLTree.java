@@ -12,9 +12,9 @@ import java.util.Arrays;
  */
 
 public class AVLTree {
-	private IAVLNode root;
-	private int size;
-	private int nodeIndex; //for a linear tree scan
+	public IAVLNode root;
+	public int size;
+	public int nodeIndex; //for a linear tree scan
 
 	public AVLTree() {
 		this.root = new AVLNode();
@@ -64,7 +64,7 @@ public class AVLTree {
 		return recSearch(node, k);
 	}
 
-	private IAVLNode findLastNodeEncountered(IAVLNode node, int k) {
+	public IAVLNode findLastNodeEncountered(IAVLNode node, int k) {
 		IAVLNode lastNode = node;
 
 		while (node.isRealNode()) {
@@ -214,7 +214,7 @@ public class AVLTree {
 
 		if (!root.isRealNode())
 			return null;
-		return minNode(this.getRoot()).getValue();
+		return minNode(root).getValue();
 	}
 	private IAVLNode minNode(IAVLNode node){
 		while (node.getLeft().isRealNode()) {
@@ -232,11 +232,15 @@ public class AVLTree {
 	public String max() {
 		if (!root.isRealNode())
 			return null;
-		IAVLNode node = this.root;
+		return maxNode(root).getValue();
+	}
+
+	public IAVLNode maxNode(IAVLNode node) {
 		while (node.getRight().isRealNode()) {
 			node = node.getRight();
 		}
-		return node.getValue();
+		return node;
+
 	}
 
 	/**
@@ -266,7 +270,7 @@ public class AVLTree {
 		return arr;                    // to be replaced by student code
 	}
 
-	private void fillKeysArrayInorder(IAVLNode node, int[] intArr) {
+	public void fillKeysArrayInorder(IAVLNode node, int[] intArr) {
 		if (node.isRealNode()) {
 			fillKeysArrayInorder(node.getLeft(), intArr);
 
@@ -278,7 +282,7 @@ public class AVLTree {
 
 	}
 
-	private void fillValuesArrayInorder(IAVLNode node, String[] intArr) {
+	public void fillValuesArrayInorder(IAVLNode node, String[] intArr) {
 		if (node.isRealNode()) {
 			fillValuesArrayInorder(node.getLeft(), intArr);
 			intArr[this.nodeIndex] = node.getValue();
@@ -433,7 +437,7 @@ public class AVLTree {
 
 	}
 
-	private void swtichParents(IAVLNode p, IAVLNode oldNode,IAVLNode newNode) {
+	public void swtichParents(IAVLNode p, IAVLNode oldNode,IAVLNode newNode) {
 
 		if (p.isRealNode()){
 			if (p.getLeft().getKey() == oldNode.getKey()){// include setParent
@@ -543,6 +547,7 @@ public class AVLTree {
 			this.left = new AVLNode(); //virtual node
 			this.right = new AVLNode(); //virtual node
 			this.parent  = new AVLNode(); //virtual node
+			this.size=1;
 		}
 
 		public int getKey() {
@@ -585,6 +590,8 @@ public class AVLTree {
 
 		public void setHeight(int height) {
 				this.height = height;
+			this.setSize();
+
 
 		}
 
