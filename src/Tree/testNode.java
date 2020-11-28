@@ -1,3 +1,5 @@
+package Tree;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -13,7 +15,7 @@ public class testNode {
 
     @Test
     public void testNodeSimple() {
-        AVLTree tree = new AVLTree();
+        printableTree tree = new printableTree();
         AVLTree.IAVLNode n1 = tree.new AVLNode(1, "*");
         AVLTree.IAVLNode n2 = tree.new AVLNode(2, "!");
         //geting the right keys and values
@@ -29,12 +31,13 @@ public class testNode {
         Assert.assertFalse(n1.getLeft().isRealNode());
 
         n1.setRight(n2);
-        Assert.assertEquals(1, n1.getHeight()); //got the max height of childerns
         Assert.assertTrue(n1.getRight().isRealNode());
         Assert.assertFalse(n1.getLeft().isRealNode());
 
         Assert.assertFalse(n2.getRight().isRealNode());
         Assert.assertFalse(n2.getLeft().isRealNode());
+
+
 
 
     }
@@ -100,7 +103,7 @@ public class testNode {
         AVLTree.IAVLNode s1 = tree.findSuccessor(tree.getRoot());
 
 
-//        TreePrinter.printTree(tree.getRoot());
+//        Tree.TreePrinter.printTree(tree.getRoot());
 
 
     }
@@ -126,10 +129,7 @@ public class testNode {
         Assert.assertArrayEquals(new String[]{"6", "12", "25", "50", "55", "65", "75"}, tree.infoToArray());
 
         Assert.assertEquals("12", tree.search(12));
-        Assert.assertEquals(12, tree.getRoot().getKey());
-        Assert.assertEquals(75, tree.getRoot().getRight().getKey());
-        Assert.assertEquals(12, tree.getRoot().getRight().getParent().getKey());
-        Assert.assertEquals(12, tree.getRoot().getLeft().getParent().getKey());
+
         Assert.assertEquals("25", tree.search(25));
         Assert.assertEquals("55", tree.search(55));
         Assert.assertEquals("6", tree.search(6));
@@ -188,7 +188,7 @@ public class testNode {
             tree.printTree(kh);
         }
 //        tree.printTree(kh);
-//        AVLTree.IAVLNode x = tree.getRoot().getRight();
+//        Tree.AVLTree.IAVLNode x = tree.getRoot().getRight();
 //        tree.RotateRight(x);
 //        tree.printTree(kh);
 //        x = tree.getRoot().getRight();
@@ -197,10 +197,10 @@ public class testNode {
 
 //        tree.printTree(kh);
 //        tree.balanceTree(x,0);
-////        AVLTree.IAVLNode x = tree.getRoot();
+////        Tree.AVLTree.IAVLNode x = tree.getRoot();
 
 //        tree.printTree(kh);
-//        AVLTree.IAVLNode y = tree.getRoot().getRight();
+//        Tree.AVLTree.IAVLNode y = tree.getRoot().getRight();
 //
 
 
@@ -237,18 +237,19 @@ public class testNode {
     @Test
     public void printFullTree() {
         printableTree tree = new printableTree();
-        int[] values = createshuffedArrSize(20);
+        int[] values =createshuffedArrSize(20); //{ 11,10,9,6,5,4,2,};
         shuffleArray(values);
         for (int val : values) {
             String info = Integer.toString(val);
             int x = tree.insert(val, info);
-            tree.printTree(khd);
+
             System.out.println("----------------------------TOOK " + x + " ACTIONS----------------------------");
         }
+        tree.printTree(kh);
     }
 
     @Test
-    public void TestRoot() {
+    public void TestDeleteRoot() {
         printableTree tree = new printableTree();
         //should print two trees of size 1, only the root
         tree.insert(1, "1");
@@ -292,15 +293,15 @@ public class testNode {
     @Test
     public void TestDeleteWithLeftChild() {
         printableTree tree = new printableTree();
-        int[] values = createArrSize(8);
+        int[] values = {5,3,2,1};
         for (int val : values) {
             String info = Integer.toString(val);
             int x = tree.insert(val, info);
         }
         tree.printTree(kh);
-        tree.delete(4);
+        tree.delete(2);
 
-        tree.printTree(dif);
+        tree.printTree(kh);
     }
 
     @Test
@@ -314,7 +315,7 @@ public class testNode {
         tree.printTree(kh);
         tree.delete(15);
 
-        tree.printTree(kh);
+        tree.printTree(dif);
     }
 
     @Test

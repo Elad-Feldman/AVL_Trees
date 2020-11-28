@@ -1,3 +1,5 @@
+package Tree;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +22,8 @@ public class printableTree extends AVLTree {
                 return  +diff[0]- diff[1] + ","+key;
             if (what2print=="")
                 return  ""+key;
+            if (what2print=="sk")
+                return  key +","+node.getSize();
 
         }
         return "*";

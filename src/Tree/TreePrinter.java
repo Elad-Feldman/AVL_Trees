@@ -1,4 +1,4 @@
-
+package Tree;
 
 
 /**
@@ -11,27 +11,27 @@ public class TreePrinter {
      * Node that can be printed
      */
     public interface IAVLNode {
-        public int getKey(); //returns node's key (for virtuval node return -1)
+        int getKey(); //returns node's key (for virtuval node return -1)
 
-        public String getValue(); //returns node's value [info] (for virtuval node return null)
+        String getValue(); //returns node's value [info] (for virtuval node return null)
 
-        public void setLeft(IAVLNode node); //sets left child
+        void setLeft(IAVLNode node); //sets left child
 
-        public IAVLNode getLeft(); //returns left child (if there is no left child return null)
+        IAVLNode getLeft(); //returns left child (if there is no left child return null)
 
-        public void setRight(IAVLNode node); //sets right child
+        void setRight(IAVLNode node); //sets right child
 
-        public IAVLNode getRight(); //returns right child (if there is no right child return null)
+        IAVLNode getRight(); //returns right child (if there is no right child return null)
 
-        public void setParent(IAVLNode node); //sets parent
+        void setParent(IAVLNode node); //sets parent
 
-        public IAVLNode getParent(); //returns the parent (if there is no parent return null)
+        IAVLNode getParent(); //returns the parent (if there is no parent return null)
 
-        public boolean isRealNode(); // Returns True if this is a non-virtual AVL node
+        boolean isRealNode(); // Returns True if this is a non-virtual AVL node
 
-        public void setHeight(int height); // sets the height of the node
+        void setHeight(int height); // sets the height of the node
 
-        public int getHeight(); // Returns the height of the node (-1 for virtual nodes)
+        int getHeight(); // Returns the height of the node (-1 for virtual nodes)
 
 
         String getText();
@@ -45,13 +45,13 @@ public class TreePrinter {
      * tree root node
      */
     public class AVLNode implements IAVLNode {
-        private int key;
+        private final int key;
         private int height;
-        private String val;
+        private final String val;
         private IAVLNode left;
         private IAVLNode right;
         private IAVLNode parent;
-        private boolean realNode;
+        private final boolean realNode;
 
 
         public AVLNode() {
