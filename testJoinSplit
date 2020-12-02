@@ -1,0 +1,99 @@
+package Tree;
+
+import org.junit.Assert;
+import org.junit.Test;
+
+public class testJoinSplit {
+
+    @Test
+    public void testJoinSimple() {
+
+        printableTree mainTree = new printableTree();
+        mainTree.insert(1, "1");
+        mainTree.insert(2, "2");
+
+        AVLTree.IAVLNode x = mainTree.new AVLNode(3, "3");
+
+        printableTree t = new printableTree();
+        t.insert(4, "4");
+        t.insert(5, "5");
+
+        mainTree.join(x, t);
+
+        mainTree.printTree("kh");
+        mainTree.printTree("d");
+    }
+
+
+
+    @Test
+    public void testJoinNotSoSimple() {
+
+        printableTree mainTree = new printableTree();
+        mainTree.insert(1, "1");
+        mainTree.insert(2, "2");
+        mainTree.insert(3, "2");
+        mainTree.insert(4, "2");
+
+        AVLTree.IAVLNode x = mainTree.new AVLNode(5, "3");
+
+        printableTree t = new printableTree();
+        t.insert(40, "4");
+        t.insert(650, "5");
+        t.insert(50, "5");
+        t.insert(60, "5");
+
+        mainTree.join(x, t);
+
+        mainTree.printTree("kh");
+        mainTree.printTree("d");
+    }
+
+
+    @Test
+    public void testJoinRoot() {
+
+        printableTree mainTree = new printableTree();
+        mainTree.insert(1, "1");
+
+
+        AVLTree.IAVLNode x = mainTree.new AVLNode(5, "3");
+
+        printableTree t = new printableTree();
+        t.insert(40, "4");
+
+
+        mainTree.join(x, t);
+
+        mainTree.printTree("kh");
+        mainTree.printTree("d");
+    }
+
+    @Test
+    public void testJoinEmpty() {
+
+        printableTree mainTree = new printableTree();
+
+        AVLTree.IAVLNode x = mainTree.new AVLNode(5, "3");
+
+        printableTree t = new printableTree();
+        t.insert(40, "4");
+        t.insert(650, "5");
+        t.insert(50, "5");
+        t.insert(60, "5");
+
+        mainTree.join(x, t);
+
+        mainTree.printTree("kh");
+        mainTree.printTree("d");
+    }
+
+
+
+
+
+
+
+
+
+}
