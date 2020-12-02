@@ -269,8 +269,31 @@ public class AVLTree {
 		return null;
 	}
 
+private AVLTree taller(AVLTree t1, AVLTree t2) {
+		if (t1.getTreeHeight() >= t2.getTreeHeight()) {
+			return t1;
+		}
+		return t2;
+	}
+
+	private AVLTree shorter(AVLTree t1, AVLTree t2) {
+		if (t2.getTreeHeight() <= t1.getTreeHeight()) {
+			return t2;
+		}
+		return t1;
+	}
+
+	private IAVLNode getNodeOfRankK(AVLTree tree, int k) {
+		// find most left node in higher tree with rank <= k
+		IAVLNode current = tree.getRoot();
+		while (current.getHeight() > k) {
+			current = current.getLeft();
+		}
+		return current;
+	}
+
 	/**
-	 * public join(IAVLNode x, AVLTree t)
+	 * public join(IAVLNode x, Tree.AVLTree t)
 	 * <p>
 	 * joins t and x with the tree.
 	 * Returns the complexity of the operation (|tree.rank - t.rank| + 1).
@@ -278,7 +301,48 @@ public class AVLTree {
 	 * postcondition: none
 	 */
 	public int join(IAVLNode x, AVLTree t) {
-		return 0;
+		int complexity;
+
+		// either trees is empty
+		if (t.empty()) {
+			complexity = Math.abs(this.getTreeHeight() + 1) + 1;
+			return complexity;
+		}
+		else if (this.empty()) {
+			this.size = t.root.getSize();
+			this.root = t.getRoot();
+			complexity = Math.abs(-1 - this.getTreeHeight()) + 1;
+			return complexity;
+		}
+
+
+		AVLTree tallTree = taller(this, t);
+		AVLTree shortTree = shorter(this, t);
+
+
+		int k = shortTree.getTreeHeight();
+
+		x.setHeight(k+1);
+
+		IAVLNode b = getNodeOfRankK(tallTree, k);
+		IAVLNode c = b.getParent();
+		swtichParents(c, b, x);
+
+		if (x.getKey() < b.getKey()) {
+			x.setRight(b);
+			x.setLeft(shortTree.getRoot());
+		}
+		else {
+			x.setRight(shortTree.getRoot());
+			x.setLeft(b);
+		}
+
+		int numActions = balanceTree(x, 0);
+		this.size = tallTree.root.getSize();
+		this.root = tallTree.getRoot();
+
+		complexity = Math.abs(this.getTreeHeight() - t.getTreeHeight()) + 1;
+		return complexity;
 	}
 
 	private IAVLNode insertNode(IAVLNode root, IAVLNode newNode) {
