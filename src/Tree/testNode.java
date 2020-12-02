@@ -15,6 +15,17 @@ public class testNode {
 
     @Test
     public void testNodeSimple() {
+        printableTree mainTree= new printableTree();
+        AVLTree.IAVLNode x = mainTree.new AVLNode(10, "*");
+        printableTree secondTree= new printableTree();
+
+        //insert 1 to 9 into main tree
+        // insert 12 up to 15 into secondtree
+        //mainTree.Join(x ,secondTree)
+
+
+
+
         printableTree tree = new printableTree();
         AVLTree.IAVLNode n1 = tree.new AVLNode(1, "*");
         AVLTree.IAVLNode n2 = tree.new AVLNode(2, "!");
