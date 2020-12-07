@@ -1,7 +1,7 @@
 package Tree;
 
 import java.util.Arrays;
-/// Written by Elad Feldman 25/11/2020
+
 /**
  *
  * Tree.AVLTree
@@ -15,6 +15,7 @@ public class AVLTree {
 	public IAVLNode root;
 	public int size;
 	public int nodeIndex; //for a linear tree scan
+	private long splitComplexity;
 
 	public AVLTree() {
 		this.root = new AVLNode();
@@ -300,7 +301,7 @@ public class AVLTree {
 	 * postcondition: none
 	 */
 	public int size() {
-		return this.size; // to be replaced by student code
+		return this.root.getSize(); // to be replaced by student code
 	}
 
 	/**
@@ -315,6 +316,15 @@ public class AVLTree {
 		return this.root;
 	}
 
+
+
+	private AVLTree createTreeFromNode(IAVLNode node) {
+		AVLTree tree = new AVLTree();
+		tree.root = node;
+		tree.root.setParent(new AVLNode());
+		return tree;
+	}
+
 	/**
 	 * public string split(int x)
 	 * <p>
@@ -324,10 +334,47 @@ public class AVLTree {
 	 * postcondition: none
 	 */
 	public AVLTree[] split(int x) {
-		return null;
+		this.splitComplexity = 0;
+		IAVLNode xNode = recSearch(this.getRoot(), x);
+
+		AVLTree t1 = createTreeFromNode(xNode.getLeft());
+		AVLTree t2 = createTreeFromNode(xNode.getRight());
+
+		IAVLNode current = xNode.getParent();
+		if (xNode.equals(this.getRoot())) {
+			return new AVLTree[]{t1, t2};
+		}
+
+		System.out.println(xNode.getKey());
+
+		boolean isRightChild = xNode.getParent().getRight().getKey() == xNode.getKey();
+
+		while (current.isRealNode()) {
+			if (isRightChild) {
+				AVLTree leftTree = createTreeFromNode(current.getLeft());
+				IAVLNode nodeBetweenTrees = leftTree.new AVLNode(current.getKey(), current.getValue());
+				this.splitComplexity += t1.join(nodeBetweenTrees, leftTree);
+			}
+
+			else {
+				AVLTree rightTree = createTreeFromNode(current.getRight());
+				IAVLNode nodeBetweenTrees = t2.new AVLNode(current.getKey(), current.getValue());
+				this.splitComplexity += t2.join(nodeBetweenTrees, rightTree);
+			}
+			if (current.equals(this.getRoot())){
+				break;
+			}
+
+			isRightChild = current.getParent().getRight().equals(current); // save state before deleting
+			current = current.getParent();
+		}
+		return new AVLTree[]{t1, t2};
 	}
 
-private AVLTree taller(AVLTree t1, AVLTree t2) {
+
+
+
+	private AVLTree taller(AVLTree t1, AVLTree t2) {
 		if (t1.getTreeHeight() >= t2.getTreeHeight()) {
 			return t1;
 		}
@@ -341,11 +388,20 @@ private AVLTree taller(AVLTree t1, AVLTree t2) {
 		return t1;
 	}
 
-	private IAVLNode getNodeOfRankK(AVLTree tree, int k) {
+	private IAVLNode getNodeOfRankKLeft(AVLTree tree, int k) {
 		// find most left node in higher tree with rank <= k
 		IAVLNode current = tree.getRoot();
 		while (current.getHeight() > k) {
 			current = current.getLeft();
+		}
+		return current;
+	}
+
+	private IAVLNode getNodeOfRankKRight(AVLTree tree, int k) {
+		// find most left node in higher tree with rank <= k
+		IAVLNode current = tree.getRoot();
+		while (current.getHeight() > k) {
+			current = current.getRight();
 		}
 		return current;
 	}
@@ -363,12 +419,14 @@ private AVLTree taller(AVLTree t1, AVLTree t2) {
 
 		// either trees is empty
 		if (t.empty()) {
+			this.insert(x.getKey(), x.getValue());
 			complexity = Math.abs(this.getTreeHeight() + 1) + 1;
 			return complexity;
 		}
 		else if (this.empty()) {
 			this.size = t.root.getSize();
 			this.root = t.getRoot();
+			this.insert(x.getKey(), x.getValue());
 			complexity = Math.abs(-1 - this.getTreeHeight()) + 1;
 			return complexity;
 		}
@@ -377,12 +435,21 @@ private AVLTree taller(AVLTree t1, AVLTree t2) {
 		AVLTree tallTree = taller(this, t);
 		AVLTree shortTree = shorter(this, t);
 
-
 		int k = shortTree.getTreeHeight();
-
 		x.setHeight(k+1);
 
-		IAVLNode b = getNodeOfRankK(tallTree, k);
+		IAVLNode b;
+
+		// if taller is bigger
+		if (maxNode(tallTree.getRoot()).getKey() > maxNode(shortTree.getRoot()).getKey()) {
+			b = getNodeOfRankKLeft(tallTree, k);
+		}
+		// if taller is smaller
+		else {
+			b = getNodeOfRankKRight(tallTree, k);
+		}
+
+
 		IAVLNode c = b.getParent();
 		swtichParents(c, b, x);
 
@@ -395,9 +462,10 @@ private AVLTree taller(AVLTree t1, AVLTree t2) {
 			x.setLeft(b);
 		}
 
-		int numActions = balanceTree(x, 0);
-		this.size = tallTree.root.getSize();
+
 		this.root = tallTree.getRoot();
+		balanceTree(x, 0);
+		this.size = tallTree.root.getSize();
 
 		complexity = Math.abs(this.getTreeHeight() - t.getTreeHeight()) + 1;
 		return complexity;
@@ -438,14 +506,7 @@ private AVLTree taller(AVLTree t1, AVLTree t2) {
 		swtichParents(p,x,y);
 		x.setHeight();
 		y.setHeight();
-
-
-
-
-
-
-
-
+		
 	}
 
 	public void doubleRightRotation ( AVLTree.IAVLNode z){
@@ -515,6 +576,10 @@ private AVLTree taller(AVLTree t1, AVLTree t2) {
 			newNode.setParent(p);
 			this.root =newNode;
 		}
+	}
+
+	public long getSplitComplexity() {
+		return this.splitComplexity;
 	}
 
 
@@ -591,6 +656,7 @@ private AVLTree taller(AVLTree t1, AVLTree t2) {
 		private IAVLNode parent;
 		private final boolean realNode;
 		private int size;
+
 
 
 		public AVLNode() {
