@@ -16,6 +16,8 @@ public class AVLTree {
 	public int size;
 	public int nodeIndex; //for a linear tree scan
 	private long splitComplexity;
+	private long maxSplitComplexity;
+	private long numJoins;
 
 	public AVLTree() {
 		this.root = new AVLNode();
@@ -335,6 +337,11 @@ public class AVLTree {
 	 */
 	public AVLTree[] split(int x) {
 		this.splitComplexity = 0;
+		this.maxSplitComplexity = 0;
+		this.numJoins = 0;
+
+		long z = 0;
+
 		IAVLNode xNode = recSearch(this.getRoot(), x);
 
 		AVLTree t1 = createTreeFromNode(xNode.getLeft());
@@ -353,21 +360,33 @@ public class AVLTree {
 			if (isRightChild) {
 				AVLTree leftTree = createTreeFromNode(current.getLeft());
 				IAVLNode nodeBetweenTrees = leftTree.new AVLNode(current.getKey(), current.getValue());
-				this.splitComplexity += t1.join(nodeBetweenTrees, leftTree);
+
+				z = t1.join(nodeBetweenTrees, leftTree);
 			}
 
 			else {
 				AVLTree rightTree = createTreeFromNode(current.getRight());
 				IAVLNode nodeBetweenTrees = t2.new AVLNode(current.getKey(), current.getValue());
-				this.splitComplexity += t2.join(nodeBetweenTrees, rightTree);
+
+				z = t2.join(nodeBetweenTrees, rightTree);
 			}
+
+			// update complexity
+			this.splitComplexity += z;
+			this.numJoins++;
+			if (z > this.maxSplitComplexity) {
+				this.maxSplitComplexity = z;
+			}
+
 			if (current.equals(this.getRoot())){
 				break;
 			}
 
-			isRightChild = current.getParent().getRight().equals(current); // save state before deleting
+			isRightChild = current.getParent().getRight().equals(current);
 			current = current.getParent();
 		}
+
+		this.splitComplexity = z;
 		return new AVLTree[]{t1, t2};
 	}
 
@@ -580,6 +599,12 @@ public class AVLTree {
 
 	public long getSplitComplexity() {
 		return this.splitComplexity;
+	}
+	public long getMaxSplitComplexity() {
+		return this.maxSplitComplexity;
+	}
+	public long getNumJoins() {
+		return this.numJoins;
 	}
 
 
