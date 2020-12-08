@@ -352,6 +352,7 @@ public class AVLTree {
 			return new AVLTree[]{t1, t2};
 		}
 
+		System.out.print("key to split by: ");
 		System.out.println(xNode.getKey());
 
 		boolean isRightChild = xNode.getParent().getRight().getKey() == xNode.getKey();
@@ -386,6 +387,7 @@ public class AVLTree {
 			current = current.getParent();
 		}
 
+		this.numJoins++;
 		this.splitComplexity = z;
 		return new AVLTree[]{t1, t2};
 	}
