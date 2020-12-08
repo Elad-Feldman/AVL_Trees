@@ -450,6 +450,7 @@ public class AVLTree {
 			return complexity;
 		}
 
+		complexity = Math.abs(this.getTreeHeight() - t.getTreeHeight()) + 1;
 
 		AVLTree tallTree = taller(this, t);
 		AVLTree shortTree = shorter(this, t);
@@ -468,7 +469,6 @@ public class AVLTree {
 			b = getNodeOfRankKRight(tallTree, k);
 		}
 
-
 		IAVLNode c = b.getParent();
 		swtichParents(c, b, x);
 
@@ -486,7 +486,6 @@ public class AVLTree {
 		balanceTree(x, 0);
 		this.size = tallTree.root.getSize();
 
-		complexity = Math.abs(this.getTreeHeight() - t.getTreeHeight()) + 1;
 		return complexity;
 	}
 
